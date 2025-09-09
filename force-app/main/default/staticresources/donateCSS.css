@@ -1,0 +1,434 @@
+.radioButtons input[type='radio'] {
+    position: fixed;
+    top: -999px;
+    left: -999px;
+    opacity: 0;
+   
+}
+
+
+.tableContainer,.tableContainerSmall
+{
+    background:#ffffff;
+    
+}
+
+input[type='radio']:checked + label, .singleAmount
+{
+    border-color:#FF803C;
+     background:#FF803C none repeat scroll 0% 0% / auto padding-box border-box;
+}
+
+input[type='radio']:hover + label, .singleAmount
+{
+    border-color:#FF803C;
+     background:#FF803C none repeat scroll 0% 0% / auto padding-box border-box;
+}
+
+.amountList td label,.typeList td label,.freqList td label {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none solid rgb(255, 255, 255);
+    text-size-adjust: 100%;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    white-space: pre;
+    column-rule-color: rgb(255, 255, 255);
+    align-items: flex-start;
+    perspective-origin: 65.8906px 24.5px;
+    transform-origin: 65.8906px 24.5px;
+    user-select: none;
+    caret-color: rgb(255, 255, 255);
+    background: rgb(255, 99, 18) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 3px solid rgb(255, 99, 18);
+    border-radius: 5px 5px 5px 5px;
+    font: normal normal 400 normal 16px / 24px MuseoSans, "Open Sans", Helvetica, Verdana, sans-serif;
+    outline: rgb(255, 255, 255) none 0px;
+}
+
+
+.amountList,.typeList,.freqList
+{
+ border-collapse:separate;
+}
+.amountList TD,.typeList TD,.freqList TD
+{
+   display:inline-block;
+
+   border-collapse:separate;
+}
+
+.radioButtons input[type='radio'] {
+    position: fixed;
+    top: -999px;
+    left: -999px;
+    opacity: 0;
+}
+
+.amountList label
+{
+   width:100%;
+   min-width:70px;
+
+    text-align:center;
+
+}
+
+@media only screen and (max-width: 1940px)
+{
+
+.amountList TD 
+{
+ width:33%;
+}
+    
+}
+
+@media only screen and (max-width: 639px)
+
+
+
+{
+
+.amountList TD 
+{
+ width:50%;
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.freqList label
+{
+   width:100%;
+   min-width:70px;
+
+    text-align:center;
+
+}
+
+@media only screen and (max-width: 1940px)
+{
+
+.freqList TD 
+{
+ width:33%;
+}
+    
+}
+
+@media only screen and (max-width: 639px)
+
+
+
+{
+
+.freqList TD 
+{
+ width:50%;
+}
+
+
+}
+
+@media only screen and (max-width: 1640px)
+{
+
+#rev_slider_1_1_wrapper
+
+{
+    width:1900px  !important;
+    margin-left:-300px;
+}
+    
+}
+
+@media only screen and (max-width: 2000px)
+{
+
+#rev_slider_1_1_wrapper
+
+{
+    width:2500px  !important;;
+    margin-left:-400px;
+}
+    
+}
+
+
+
+
+@media only screen and (max-width: 452px)
+{
+
+#rev_slider_1_1_wrapper
+
+{
+    width:600px  !important;;
+    margin-left:-10px;
+}
+    
+}
+
+
+.form-item input[type='text'],
+
+.form-item textarea 
+{
+
+  
+
+}
+.form-item input[type='text'],
+.form-item select,
+.form-item textarea 
+{
+
+
+
+   height:40px;
+background: #fff;
+    
+    font-size: .8888888889em;
+
+        border: 3px solid #ff6312;
+    border-top-color: rgb(255, 99, 18);
+    border-top-style: solid;
+    border-top-width: 3px;
+    border-right-color: rgb(255, 99, 18);
+    border-right-style: solid;
+    border-right-width: 3px;
+    border-bottom-color: rgb(255, 99, 18);
+    border-bottom-style: solid;
+    border-bottom-width: 3px;
+    border-left-color: rgb(255, 99, 18);
+    border-left-style: solid;
+    border-left-width: 3px;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    border-radius: 5px;
+}
+
+.donateSubmit
+{
+   
+   background: #ff6312;
+    border-radius: 5px;
+    padding: 20px 30px 20px;
+    border-color: #ff6312;
+    border-top-color: rgb(255, 99, 18);
+    border-right-color: rgb(255, 99, 18);
+    border-bottom-color: rgb(255, 99, 18);
+    border-left-color: rgb(255, 99, 18);
+}
+
+.form-item select
+{
+    margin-left:5px;
+}
+.faux-bg
+{
+    pointer-events: none;
+}
+
+.tableHeader
+{
+  
+    font-size:19pt;
+    font-weight:700;
+    font-family:MuseoSans,Open Sans,Helvetica,Verdana,sans-serif;
+}
+
+.campaignImage
+{
+    height:100%;
+    width:100%;
+}
+
+@media handheld, screen and (max-device-width: 962px)
+{
+
+    input[type='radio'] + label, .singleAmount
+{
+
+    margin-top:2px;
+}
+
+
+}
+
+label.error
+{
+    z-index:1;
+    font-weight:700;
+}
+#type,#amount,#contact,#payment
+{
+    padding-left:0px;
+}
+.container
+{
+   /* padding-left:0px !important; */
+}
+
+
+.box-shadow-menu {
+  position: relative;
+  padding-left: 1.25em;
+}
+.box-shadow-menu:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  width: 1em;
+  height: 0.15em;
+  background: black;
+  box-shadow: 
+    0 0.25em 0 0 black,
+    0 0.5em 0 0 black;
+}
+
+input[type="text"]
+{
+max-width:none !important;
+width:100%;
+
+}
+.amountList + label.error,.typeList + label.error
+{
+ position:relative;
+ margin-top:0.5em;
+  margin-left:0.5em;
+
+}
+
+select[id$=':ccExpMonth'],select[id$=':ccExpYear']
+{
+ min-width:90px;
+}
+@media handheld, screen and (max-device-width: 452px)
+{
+#rev_slider_1_1_wrapper
+{
+height:200px !important;
+  
+}
+.vc_custom_1524925086720
+{
+
+  height:200px;
+}
+label.error
+{
+  position:relative;
+  margin-left:0.4em;
+}
+  label[for$=':ccExpMonth']
+  {
+  
+    min-width:100% ;
+  }
+select[id$=':ccExpYear']
+{
+  min-width:39%;
+}
+select[id$=':ccExpMonth']
+{
+ min-width:45%;
+}
+
+
+}
+
+.socsection
+{
+
+  padding-inline-start:0px;
+}
+.socsectionmain
+{
+  margin-top:40px;
+  text-align:center;
+}
+.socsectionmain ul li
+{
+    margin: 10px 8px;
+    display: inline-block;
+}
+
+.socsectionmain ul li img {
+    width: 32px;
+    height: auto;
+}
+.iContainer
+{
+ 
+ 
+
+}
+.col-lg-11
+{
+  padding:0px !important;
+}
+.row
+{
+  margin:0px !important;
+}
+.innerContainern
+{
+   width:100% !important;
+  max-width:700px !important;
+ 
+  margin:0 auto;
+  float:none;
+  display:block;
+}
+
+.side_banner
+{
+  display:none;
+}
+
+@media handheld, screen and (max-device-width: 962px)
+{
+
+  input[type='radio'] + label, .singleAmount 
+  {
+    z-index:1;
+  }
+}
+
+.g-recaptcha {
+    transform-origin: top left;
+    padding-left: 0.7em;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    justify-content: center;
+}

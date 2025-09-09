@@ -1,0 +1,186 @@
+<!--  
+Created By                  : Girikon (Sahil)
+Created On                  : Dec 05, 2024
+@description                : This component is used in screen flow (created for booking form) to handle the program selection section.
+
+Modification log 
+Modified By                 : 
+Modified On                 : 
+@description                : 
+-->
+<template>
+    <template if:false={showSuccessMessage}>
+        <!-- <div class="slds-box slds-m-vertical_large instructions-class" style="font-size: 16px;line-height: 1.5;">
+            <lightning-formatted-rich-text value={instructionsHTML}>
+            </lightning-formatted-rich-text>
+        </div> -->
+        <label>
+            <span style="color: #444444;font-weight: bold">Who will be the main contact
+                throughout all communication regarding the program?
+            </span>
+        </label>
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item size="6" class="slds-p-right_x-small">
+                <lightning-input type="text" name="Main Contact First Name" label="First Name" value={mainConFirstName}
+                    onchange={handleChange2} required class="validate" placeholder="First Name" max-length="40">
+                </lightning-input>
+                <lightning-combobox name="Number Of Programs" label={noOfProgramsLabel} value={noOfProgramsValue}
+                    placeholder="Select Number Of Presentations" options={noOfProgramsOptions} onchange={handleChange2}
+                    required class="validate">
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" class="slds-p-left_x-small">
+                <lightning-input type="text" name="Main Contact Last Name" label="Last Name" value={mainConLastName}
+                    onchange={handleChange2} required class="validate" placeholder="Last Name" max-length="80">
+                </lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+        <template lwc:if={showNoOfProgramsErrorMessage}>
+            <p style="color: rgb(234, 0, 30);">You can book up to four 1-hour sessions per day. To add more free
+                sessions, please remove some of the selected paid sessions.</p> <!-- class="slds-p-top_large"-->
+        </template>
+        <template for:each={selectedProgramsList} for:item="item" for:index="index">
+            <div class="slds-box slds-m-top_large" key={item.key}>
+                <div style="font-size: 18px;font-weight: 700;text-decoration: underline;">Presentation {item.key}
+                    Details:
+                </div>
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item size="4" class="slds-p-right_x-small">
+                        <lightning-combobox name="Program Type" label="Program Type" value={item.programTypeValue}
+                            placeholder="Select Program Type" options={programTypeOptions} onchange={handleChange}
+                            data-index={index} required class="validate">
+                        </lightning-combobox>
+                        <lightning-combobox name="Year Level Group" label="Year Level" value={item.yearLevelValue}
+                            placeholder="Select Year Level" options={item.yearLevelsList} onchange={handleChange}
+                            data-index={index} required class="validate" disabled={item.isYearLevelDisabled}>
+                        </lightning-combobox>
+                        <lightning-combobox name="Presentation Duration" label="Presentation Duration (In Minutes)"
+                            value={item.presentationDurationValue} placeholder="Select Presentation Duration"
+                            options={item.presentDuration} onchange={handleChange} data-index={index} required
+                            class="validate">
+                        </lightning-combobox>
+                        <!-- style="padding-top: 21px;" -->
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4">
+                        <lightning-combobox name="Presentation Type" label="Presentation Type"
+                            value={item.presentationTypeValue} placeholder="Select Presentation Type"
+                            options={presentationTypeOptions} onchange={handleChange} data-index={index} required
+                            class="validate">
+                        </lightning-combobox>
+                        <lightning-input type="number" name="Number Of Participants" label="Number Of Participants"
+                            value={item.noOfParticpantsValue} onchange={handleChange} data-index={index} required
+                            class="validate" min="1"
+                            message-when-range-underflow="No. of participants should be greater than 0." max="999">
+                        </lightning-input>
+                        <!-- max="100"
+                            message-when-range-overflow="You cannot have more than 100 participants in one session. Please add more programs with different timings." -->
+                        <!-- style="padding-top: 21px;" -->
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4" class="slds-p-left_x-small">
+                        <lightning-combobox name="Program Selection" label="Program Selection"
+                            value={item.programSelectionValue} placeholder="Select Program"
+                            options={item.programSelectionOptions} onchange={handleChange} data-index={index} required
+                            class="validate" disabled={item.isProgramSelectionDisabled}>
+                        </lightning-combobox>
+                        <!-- <lightning-input type="datetime" name="Schedule DateTime For Program"
+                            label="Schedule Date & Time For Program" value={item.scheduleForProgram}
+                            onchange={handleChange} data-index={index} required class="validate"
+                            timezone="Australia/Sydney" min={todayDate}
+                            message-when-range-underflow="Program schedule shouldn't be in the past.">
+                        </lightning-input> -->
+                        <lightning-input type="time" name="Schedule Time For Program" label="Schedule Time For Program"
+                            value={item.scheduleTimeForProgram} onchange={handleChange} data-index={index} required
+                            class="validate">
+                        </lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+        <template lwc:if={isFunded}>
+            <template lwc:if={showPaidProgramsQuestion}>
+                <lightning-layout class="slds-m-top_medium">
+                    <lightning-layout-item size="6" class="slds-p-right_x-small">
+                        <lightning-combobox name="Book Additional Presentations"
+                            label="Would you like to book additional presentations beyond your free ones?"
+                            value={bookAddPresentations} placeholder="Select" options={bookAddPresentationsOptions}
+                            onchange={handleChange2}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" class="slds-p-left_x-small">
+                        <template lwc:if={showPaidPrograms}>
+                            <lightning-combobox name="Number Of Paid Programs"
+                                label="How many paid one-hour presentations would you like to book?"
+                                value={noOfPaidProgramsValue} placeholder="Select Number Of Presentations"
+                                options={noOfPaidProgramsOptions} onchange={handleChange2} required class="validate">
+                            </lightning-combobox>
+                        </template>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+            <template for:each={selectedPaidProgramsList} for:item="item" for:index="index">
+                <div class="slds-box slds-m-top_large" key={item.key}>
+                    <div style="font-size: 18px;font-weight: 700;text-decoration: underline;">Presentation {item.key}
+                        Details:
+                    </div>
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="4" class="slds-p-right_x-small">
+                            <lightning-combobox name="Program Type" label="Program Type" value={item.programTypeValue}
+                                placeholder="Select Program Type" options={programTypeOptionsAll}
+                                onchange={handleChange3} data-index={index} required class="validate">
+                            </lightning-combobox>
+                            <lightning-combobox name="Year Level Group" label="Year Level" value={item.yearLevelValue}
+                                placeholder="Select Year Level" options={item.yearLevelsList} onchange={handleChange3}
+                                data-index={index} required class="validate" disabled={item.isYearLevelDisabled}>
+                            </lightning-combobox>
+                            <lightning-combobox name="Presentation Duration" label="Presentation Duration (In Minutes)"
+                                value={item.presentationDurationValue} placeholder="Select Presentation Duration"
+                                options={item.presentDuration} onchange={handleChange3} data-index={index}
+                                required class="validate">
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4">
+                            <lightning-combobox name="Presentation Type" label="Presentation Type"
+                                value={item.presentationTypeValue} placeholder="Select Presentation Type"
+                                options={presentationTypeOptions} onchange={handleChange3} data-index={index} required
+                                class="validate">
+                            </lightning-combobox>
+                            <lightning-input type="number" name="Number Of Participants" label="Number Of Participants"
+                                value={item.noOfParticpantsValue} onchange={handleChange3} data-index={index} required
+                                class="validate" min="1"
+                                message-when-range-underflow="No. of participants should be greater than 0." max="999">
+                            </lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4" class="slds-p-left_x-small">
+                            <lightning-combobox name="Program Selection" label="Program Selection"
+                                value={item.programSelectionValue} placeholder="Select Program"
+                                options={item.programSelectionOptions} onchange={handleChange3} data-index={index}
+                                required class="validate" disabled={item.isProgramSelectionDisabled}>
+                            </lightning-combobox>
+                            <lightning-input type="time" name="Schedule Time For Program"
+                                label="Schedule Time For Program" value={item.scheduleTimeForProgram}
+                                onchange={handleChange3} data-index={index} required class="validate">
+                            </lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </template>
+        </template>
+        <template if:true={showErrorMessage}>
+            <p style="color: rgb(234, 0, 30);" class="slds-p-top_large">{errorMessage}</p>
+        </template>
+        <div
+            style="text-align: right;border-top: 1px solid rgb(201, 201, 201);width: 100%;padding-top: 0.75rem;margin-top: 1.75rem;">
+            <lightning-button variant="brand" label="Submit" title="Submit" onclick={validateFormPartB}>
+            </lightning-button>
+        </div>
+    </template>
+    <template if:true={showSuccessMessage}>
+        <p style="text-align: center; font-size: 16px">Thanks for booking! We've received your information and will
+            email you shortly with further details.</p>
+    </template>
+    <template if:true={showSpinner}>
+        <div class="exampleHolder">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+</template>

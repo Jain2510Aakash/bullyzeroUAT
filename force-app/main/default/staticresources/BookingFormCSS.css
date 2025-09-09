@@ -1,0 +1,65 @@
+flowruntime-flow {
+	border: 2px solid !important;
+	border-color: #ebbc87 !important;
+	border-radius: 20px !important;
+	font-size: 14px;
+}
+
+.slds-button_brand {
+	background-color: #f5802d !important;
+	border-radius: 30px !important;
+	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1) !important;
+	font-weight: 700 !important;
+	border: 2px solid #ff6312 !important;
+	font-size: 16px !important;
+	border-color: #f5802d !important;
+	color: #000000 !important;
+}
+
+.slds-button_brand:hover {
+	background-color: #f5802d !important;
+	border-radius: 30px !important;
+	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1) !important;
+	font-weight: 700 !important;
+	border: 2px solid #ff6312 !important;
+	font-size: 16px !important;
+	border-color: #f5802d !important;
+	color: #000000 !important;
+	filter: brightness(120%) !important;
+	transform: none !important;
+}
+
+.instructions-class {
+	border: none !important;
+	background-color: #ebbc87 !important;
+	border-radius: 20px !important;
+}
+
+.slds-form-element__label {
+	font-weight: 700 !important;
+	font-size: 14px !important;
+}
+
+.slds-input,
+.slds-select,
+.slds-textarea,
+.slds-combobox__input {
+	border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+.slds-box {
+	border-radius: 20px !important;
+	border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+.container {
+	padding: 0px !important;
+}
+
+.section.background-dark h2 {
+	color: #000000 !important;
+}
+
+.aos-animate {
+	overflow: visible !important;
+}
