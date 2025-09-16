@@ -48,6 +48,7 @@
         <offset>0</offset>
     </actionCalls>
     <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
     <interviewLabel>Send Email To User When Booking ThresholdValue reached {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Send Email To User When Booking ThresholdValue reached</label>

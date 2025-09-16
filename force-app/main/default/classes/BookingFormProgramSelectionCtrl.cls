@@ -314,7 +314,7 @@ public without sharing class BookingFormProgramSelectionCtrl
     @AuraEnabled(cacheable=true)
     public static Sponsorship_Tracker__c getSponsorshipTracker(String promoCode)
     {
-        List<Sponsorship_Tracker__c> trackerList = [SELECT Id, Organisation__c, Number_Of_Free_Programs_Per_School__c, Program_Type__c FROM Sponsorship_Tracker__c WHERE Promo_Code__c = :promoCode LIMIT 1];
+        List<Sponsorship_Tracker__c> trackerList = [SELECT Id, Organisation__c, Number_Of_Free_Programs_Per_School__c, Program_Type__c,Promo_Code_Expiry_Date__c,Min_Paid_Programs__c FROM Sponsorship_Tracker__c WHERE Promo_Code__c = :promoCode LIMIT 1];
         if(!trackerList.isEmpty())
         {
             return trackerList[0];

@@ -106,6 +106,7 @@
         <versionString>1.0.1</versionString>
     </actionCalls>
     <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
         <name>Check_If_Form_is_Filled_by_Bully_Zero</name>
         <label>Check If Form is Filled by Bully Zero</label>

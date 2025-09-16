@@ -48,6 +48,7 @@
         <offset>0</offset>
     </actionCalls>
     <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
     <interviewLabel>New Booking Email Alert To BullyZero {!$Flow.CurrentDateTime}</interviewLabel>
     <label>New Booking Email Alert To BullyZero</label>

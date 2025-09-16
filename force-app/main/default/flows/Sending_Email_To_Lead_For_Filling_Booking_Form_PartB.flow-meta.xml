@@ -44,6 +44,7 @@
         <nameSegment>emailSimple</nameSegment>
     </actionCalls>
     <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
     <interviewLabel>Sending Email To Lead For Filling Booking Form PartB {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Sending Email To Lead For Filling Booking Form PartB</label>
@@ -121,6 +122,14 @@
             <name>First_Screen</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Program Booking Form Link Sent To Lead Successfully.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>false</showFooter>
         <showHeader>false</showHeader>

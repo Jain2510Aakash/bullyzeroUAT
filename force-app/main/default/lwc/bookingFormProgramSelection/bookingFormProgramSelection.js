@@ -439,6 +439,11 @@ export default class BookingFormProgramSelection extends LightningElement {
             }
         });
         if (isValid) {
+             if ((this.bookAddPresentations === undefined || this.bookAddPresentations == '' || this.bookAddPresentations == 'No') && this.promoCode != null ) {
+                this.errorMessage = `Please book min ${this.sponsorshipTracker.Min_Paid_Programs__c} paid program(s) to get ${this.sponsorshipTracker.Number_Of_Free_Programs_Per_School__c} free program(s) - valid until ${this.sponsorshipTracker.Promo_Code_Expiry_Date__c}`;
+                this.showErrorMessage = true;
+                return;
+            }
             let selectedProgramsCombinedList = [];
             selectedProgramsCombinedList = this.selectedProgramsList.concat(this.selectedPaidProgramsList);
             console.log('selectedProgramsCombinedList => ', selectedProgramsCombinedList);
