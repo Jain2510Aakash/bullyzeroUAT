@@ -4,10 +4,11 @@ Created On          : Jan 09, 2025
 @description        : This class is a outer class for an InvocableMethod used in a flow to create calender events for facilitators.
 Test Class          : CreateEventsForFacilitators_Test (Coverage: __%)
 
-Modification log --
-Modified By         : Girikon
-Modified On         : May 20, 2025
-@description        : added opportunity role query from opportunity and added the contact details in the description
+Modification log 	  
+Modified By		Modified On			Description
+____________________________________________________________________________
+Girikon 		May 20, 2025		added opportunity role query from opportunity and added the contact details in the description
+Girikon			Sept 24, 2025		Added query fields from workshop and opportunity and in the workshop for loop added the bifurcation for paid and funded program
 */
 public with sharing class CreateEventsForFacilitators 
 {
@@ -19,7 +20,7 @@ public with sharing class CreateEventsForFacilitators
         {
             return new List<String>{'Events are already created for this Opportunity. In order to create again, please delete the existing ones first.'};
         }
-        List<Opportunity> oppList = [SELECT Id, Name, Will_you_be_the_main_contact_throughout__c, Who_will_meet_presenter_at_reception__c, Anything_of_sensitivity__c, Student_numbers_for_each_session__c, Can_you_have_an_IT_member_available__c, Person_allocated_for_tech_support__c, Where_can_the_presenter_park__c, Where_will_the_program_be_held__c, other_Location__c, Presentation_Location__c, Presentation_Location__Street__s, Presentation_Location__City__s, Presentation_Location__StateCode__s, toLabel(Presentation_Location__CountryCode__s), Presentation_Location__PostalCode__s, AccountId, Account.Name, Do_you_have_audio_visual_equipment__c, (SELECT Id, Name, Number_of_Attendees__c, Presenter__c, Presenter__r.Name, Program__c, Program__r.Name, Program_Type__c, Start_Date_Time__c, Year_Level__c , Presentation_Type__c, Organisation__c, Organisation__r.Name, Presentation_Duration_In_Minutes__c, End_Date_Time__c FROM Workshops__r ORDER BY Start_Date_Time__c ASC),(SELECT Id,contact.email,contact.phone,contact.Name FROM OpportunityContactRoles WHERE IsPrimary = true) FROM Opportunity WHERE Id IN :ids LIMIT 1];
+        List<Opportunity> oppList = [SELECT Id, Name,Promo_Code__c,Funded_by_3rd_Party__c,Funded_by_3rd_Party__r.Name, Will_you_be_the_main_contact_throughout__c, Who_will_meet_presenter_at_reception__c, Anything_of_sensitivity__c, Student_numbers_for_each_session__c, Can_you_have_an_IT_member_available__c, Person_allocated_for_tech_support__c, Where_can_the_presenter_park__c, Where_will_the_program_be_held__c, other_Location__c, Presentation_Location__c, Presentation_Location__Street__s, Presentation_Location__City__s, Presentation_Location__StateCode__s, toLabel(Presentation_Location__CountryCode__s), Presentation_Location__PostalCode__s, AccountId, Account.Name, Do_you_have_audio_visual_equipment__c, (SELECT Id, Name, Number_of_Attendees__c, Presenter__c, Presenter__r.Name, Program__c, Program__r.Name, Program_Type__c, Start_Date_Time__c, Year_Level__c , Presentation_Type__c, Organisation__c, Organisation__r.Name, Presentation_Duration_In_Minutes__c, End_Date_Time__c,Funded_by_3rd_Party__c,Funded_by_3rd_Party__r.Name  FROM Workshops__r ORDER BY Start_Date_Time__c ASC),(SELECT Id,contact.email,contact.phone,contact.Name FROM OpportunityContactRoles WHERE IsPrimary = true) FROM Opportunity WHERE Id IN :ids LIMIT 1];
         if(!oppList[0].Workshops__r.isEmpty())
         {
             Boolean presenterFlag = false;
@@ -84,13 +85,25 @@ public with sharing class CreateEventsForFacilitators
                 if( !oppList[0].OpportunityContactRoles.isEmpty() && oppList[0].OpportunityContactRoles != null ){
                     description += oppList[0].OpportunityContactRoles[0].Contact.Name == null ? '' : 'Contact Name - ' + oppList[0].OpportunityContactRoles[0].Contact.Name + '\r\n';
                     description +=  oppList[0].OpportunityContactRoles[0].Contact.Phone == null ? '' : 'Contact Phone - ' + oppList[0].OpportunityContactRoles[0].Contact.Phone + '\r\n';
-                    
+                    description +=  oppList[0].OpportunityContactRoles[0].Contact.Email == null ? '' : 'Contact Email - ' + oppList[0].OpportunityContactRoles[0].Contact.Email + '\r\n';
+                    /*if(oppList[0].Promo_Code__c != null){
+                        description +=  oppList[0].Promo_Code__c == null ? '' : 'Promo Code - ' + oppList[0].Promo_Code__c + '\r\n';
+                    }else{
+                        description +=  'Paid Program \r\n';
+                    }
+                    description +=  oppList[0].Funded_by_3rd_Party__c == null ? '' : 'Funded By - ' + oppList[0].Funded_by_3rd_Party__r.Name + '\r\n';
+                	*/
                 }
                 description +=  '\r\n';
                 
                 for(Workshops__c ws : dateAndWorkshopsMap.get(dt))
                 {
                     // subject = subject + ws.Program__r.Name + ', ';
+                    if(ws.Funded_by_3rd_Party__c != null){
+                        description += wsFieldsMap.get('Funded_by_3rd_Party__c').getDescribe().getLabel() + ' - ' + (ws.Funded_by_3rd_Party__c == null ? '' : ws.Funded_by_3rd_Party__r.Name) + '\r\n';
+                    }else{
+                        description +=  'Paid Program \r\n';
+                    }
                     description += wsFieldsMap.get('Presenter__c').getDescribe().getLabel() + ' - ' + ws.Presenter__r.Name + '\r\n';
                     description += 'Program Name - ' + (ws.Program__c == null ? '' : ws.Program__r.Name) + '\r\n';
                     description += wsFieldsMap.get('Program_Type__c').getDescribe().getLabel() + ' - ' + (ws.Program_Type__c == null ? '' : ws.Program_Type__c) + '\r\n';

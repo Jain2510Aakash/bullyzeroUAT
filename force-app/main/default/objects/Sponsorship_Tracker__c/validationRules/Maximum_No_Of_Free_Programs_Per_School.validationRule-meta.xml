@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Maximum_No_Of_Free_Programs_Per_School</fullName>
+    <active>true</active>
+    <errorConditionFormula>Number_Of_Free_Programs_Per_School__c &gt; 4 || Number_Of_Free_Programs_Per_School__c &lt;= 0</errorConditionFormula>
+    <errorDisplayField>Number_Of_Free_Programs_Per_School__c</errorDisplayField>
+    <errorMessage>Each school must offer more than 0 and no more than 4 free programs.</errorMessage>
+</ValidationRule>

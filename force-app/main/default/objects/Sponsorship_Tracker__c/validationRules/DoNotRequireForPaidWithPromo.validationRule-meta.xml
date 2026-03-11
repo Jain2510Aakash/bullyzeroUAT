@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DoNotRequireForPaidWithPromo</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    OR(
+        ISBLANK(Number_Of_Free_Programs_Per_School__c),
+        Number_Of_Free_Programs_Per_School__c = 0
+    ),
+    OR(
+        ISBLANK(TEXT(Discount_Eligibility__c)),
+        ISPICKVAL(Discount_Eligibility__c, &quot;Paid + Free with PromoCode&quot;)
+    )
+)</errorConditionFormula>
+    <errorDisplayField>Number_Of_Free_Programs_Per_School__c</errorDisplayField>
+    <errorMessage>Please mention Number of Free Programs</errorMessage>
+</ValidationRule>

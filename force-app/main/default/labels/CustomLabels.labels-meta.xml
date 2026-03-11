@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Booking_Form_PartC_Link</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Link Of Booking Form C</shortDescription>
+        <value>https://bullyzero--girikonuat.sandbox.my.site.com/s/form-part-c?Id=</value>
+    </labels>
+    <labels>
+        <fullName>Bully_Zero_School_Outlook_Calender_Email</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Bully Zero School Outlook Calender Email</shortDescription>
+        <value>aakash.jain@girikon.com</value>
+    </labels>
+    <labels>
+        <fullName>Company_ABN</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Company ABN</shortDescription>
+        <value>94 160 383 406</value>
+    </labels>
+    <labels>
+        <fullName>Link_Of_Booking_Form_B</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Link Of Booking Form B</shortDescription>
+        <value>https://bullyzero--girikonuat.sandbox.my.site.com/s/booking-form?Id=</value>
+    </labels>
+    <labels>
+        <fullName>Link_Of_Funded_Booking_Form_B</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Link Of Funded Booking Form B</shortDescription>
+        <value>https://bullyzero--girikonuat.sandbox.my.site.com/s/booking-form?Id=</value>
+    </labels>
+    <labels>
+        <fullName>New_Booking_Alert_Recipients</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>New Booking Alert Recipients</shortDescription>
+        <value>pragya.srivastava@girikon.com, necoiffatrefre-6100@yopmail.com, schools@bullyzero.org.au</value>
+    </labels>
+    <labels>
+        <fullName>Org_Base_Url</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Org Base Url</shortDescription>
+        <value>https://bullyzero--girikonuat.sandbox.lightning.force.com</value>
+    </labels>
+    <labels>
+        <fullName>Program_Threshold_Recipent_Email_Address</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Program Threshold Recipent Email Address</shortDescription>
+        <value>pragya.srivastava@girikon.com,necoiffatrefre-6100@yopmail.com</value>
+    </labels>
+    <labels>
+        <fullName>Sender_s_Email_Address</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Sender&apos;s Email Address</shortDescription>
+        <value>schools@bullyzero.org.au</value>
+    </labels>
+</CustomLabels>

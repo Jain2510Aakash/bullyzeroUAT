@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Min_Paid_Program_is_required</fullName>
+    <active>true</active>
+    <description>if discount eligibility is Only Paid with PromoCode, then min paid program is required</description>
+    <errorConditionFormula>AND(
+    ISPICKVAL(Discount_Eligibility__c, &quot;Only Paid with PromoCode&quot;),
+    OR(
+        ISBLANK(Min_Paid_Programs__c),
+        Min_Paid_Programs__c = 0
+    )
+)</errorConditionFormula>
+    <errorDisplayField>Min_Paid_Programs__c</errorDisplayField>
+    <errorMessage>Please fill Min Paid Program</errorMessage>
+</ValidationRule>

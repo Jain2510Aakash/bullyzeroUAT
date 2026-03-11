@@ -47,7 +47,7 @@ public class BookingFormProgramSelectionCtrl_Test {
     @isTest
     static void testconvertLeadWithDublicateAccountAndContact(){
         
-        Lead ld = new Lead(FirstName='test',LastName='Lead',Company='Girikon',School_Organisation_Email_Address__c='xyz@gmail.com',Email='xyz@gmail.com',Company_Type__c='High School',Title='Mr.',Phone='9871195655',Presentation_Location__Street__s='B-24 Noida');
+        Lead ld = new Lead(FirstName='test',LastName='Lead',Company='Girikon',School_Organisation_Email_Address__c='xyz@gmail.com',Email='xyz@gmail.com',Company_Type__c='Other',Title='Mr.',Phone='9871195655',Presentation_Location__Street__s='B-24 Noida');
         insert ld;
         
         Product2 prod = [Select Id,Name From Product2 Where Name='testProd' LIMIT 1];
@@ -95,7 +95,7 @@ public class BookingFormProgramSelectionCtrl_Test {
     @isTest
     static void testconvertLeadWithoutDublicateAccountAndContact(){
         
-        Lead ld = new Lead(FirstName='test',LastName='Lead',Company='Girikon',School_Organisation_Email_Address__c='xyz@gmail.com',Company_Type__c='High School',Title='Mr.',Phone='9871195655',Presentation_Location__Street__s='B-24 Noida');
+        Lead ld = new Lead(FirstName='test',LastName='Lead',Company='Girikon',School_Organisation_Email_Address__c='xyz@gmail.com',Company_Type__c='Other',Title='Mr.',Phone='9871195655',Presentation_Location__Street__s='B-24 Noida');
         insert ld;
         
         Product2 prod = [Select Id,Name From Product2 Where Name='testProd' LIMIT 1];

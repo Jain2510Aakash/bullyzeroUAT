@@ -24,10 +24,12 @@ Modified On                 :
                 <lightning-input type="text" name="Main Contact First Name" label="First Name" value={mainConFirstName}
                     onchange={handleChange2} required class="validate" placeholder="First Name" max-length="40">
                 </lightning-input>
-                <lightning-combobox name="Number Of Programs" label={noOfProgramsLabel} value={noOfProgramsValue}
-                    placeholder="Select Number Of Presentations" options={noOfProgramsOptions} onchange={handleChange2}
-                    required class="validate">
-                </lightning-combobox>
+                <template lwc:if={showFreePresentationSection}>
+                    <lightning-combobox name="Number Of Programs" label={noOfProgramsLabel} value={noOfProgramsValue}
+                        placeholder="Select Number Of Presentations" options={noOfProgramsOptions}
+                        onchange={handleChange2} required class="validate">
+                    </lightning-combobox>
+                </template>
             </lightning-layout-item>
             <lightning-layout-item size="6" class="slds-p-left_x-small">
                 <lightning-input type="text" name="Main Contact Last Name" label="Last Name" value={mainConLastName}
@@ -39,77 +41,89 @@ Modified On                 :
             <p style="color: rgb(234, 0, 30);">You can book up to four 1-hour sessions per day. To add more free
                 sessions, please remove some of the selected paid sessions.</p> <!-- class="slds-p-top_large"-->
         </template>
-        <template for:each={selectedProgramsList} for:item="item" for:index="index">
-            <div class="slds-box slds-m-top_large" key={item.key}>
-                <div style="font-size: 18px;font-weight: 700;text-decoration: underline;">Presentation {item.key}
-                    Details:
-                </div>
-                <lightning-layout multiple-rows="true">
-                    <lightning-layout-item size="4" class="slds-p-right_x-small">
-                        <lightning-combobox name="Program Type" label="Program Type" value={item.programTypeValue}
+        <template lwc:if={showFreePresentationSection}>
+            <template for:each={selectedProgramsList} for:item="item" for:index="index">
+                <div class="slds-box slds-m-top_large" key={item.key}>
+                    <div style="font-size: 18px;font-weight: 700;text-decoration: underline;">Presentation {item.key}
+                        Details:
+                    </div>
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="4" class="slds-p-right_x-small">
+                            <!--lightning-combobox name="Program Type" label="Program Type" value={item.programTypeValue}
                             placeholder="Select Program Type" options={programTypeOptions} onchange={handleChange}
                             data-index={index} required class="validate">
-                        </lightning-combobox>
-                        <lightning-combobox name="Year Level Group" label="Year Level" value={item.yearLevelValue}
-                            placeholder="Select Year Level" options={item.yearLevelsList} onchange={handleChange}
-                            data-index={index} required class="validate" disabled={item.isYearLevelDisabled}>
-                        </lightning-combobox>
-                        <lightning-combobox name="Presentation Duration" label="Presentation Duration (In Minutes)"
-                            value={item.presentationDurationValue} placeholder="Select Presentation Duration"
-                            options={item.presentDuration} onchange={handleChange} data-index={index} required
-                            class="validate">
-                        </lightning-combobox>
-                        <!-- style="padding-top: 21px;" -->
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4">
-                        <lightning-combobox name="Presentation Type" label="Presentation Type"
-                            value={item.presentationTypeValue} placeholder="Select Presentation Type"
-                            options={presentationTypeOptions} onchange={handleChange} data-index={index} required
-                            class="validate">
-                        </lightning-combobox>
-                        <lightning-input type="number" name="Number Of Participants" label="Number Of Participants"
-                            value={item.noOfParticpantsValue} onchange={handleChange} data-index={index} required
-                            class="validate" min="1"
-                            message-when-range-underflow="No. of participants should be greater than 0." max="999">
-                        </lightning-input>
-                        <!-- max="100"
+                        </lightning-combobox-->
+                            <lightning-combobox name="Presentation Type" label="Presentation Type"
+                                value={item.presentationTypeValue} placeholder="Select Presentation Type"
+                                options={presentationTypeOptions} onchange={handleChange} data-index={index} required
+                                class="validate">
+                            </lightning-combobox>
+                            <lightning-input type="number" name="Number Of Participants" label="Number Of Participants"
+                                value={item.noOfParticpantsValue} onchange={handleChange} data-index={index} required
+                                class="validate" min="1"
+                                message-when-range-underflow="No. of participants should be greater than 0." max="999">
+                            </lightning-input>
+                            <!-- style="padding-top: 21px;" -->
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4">
+                            <lightning-combobox name="Program Selection" label="Program Selection"
+                                value={item.programSelectionValue} placeholder="Select Program"
+                                options={item.programSelectionOptions} onchange={handleChange} data-index={index}
+                                required class="validate" disabled={item.isProgramSelectionDisabled}>
+                            </lightning-combobox>
+                            <lightning-input type="time" name="Schedule Time For Program"
+                                label="Schedule Time For Program" value={item.scheduleTimeForProgram}
+                                onchange={handleChange} data-index={index} required class="validate" min="08:00"
+                                max="20:00">
+                            </lightning-input>
+                            <!-- max="100"
                             message-when-range-overflow="You cannot have more than 100 participants in one session. Please add more programs with different timings." -->
-                        <!-- style="padding-top: 21px;" -->
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4" class="slds-p-left_x-small">
-                        <lightning-combobox name="Program Selection" label="Program Selection"
-                            value={item.programSelectionValue} placeholder="Select Program"
-                            options={item.programSelectionOptions} onchange={handleChange} data-index={index} required
-                            class="validate" disabled={item.isProgramSelectionDisabled}>
-                        </lightning-combobox>
-                        <!-- <lightning-input type="datetime" name="Schedule DateTime For Program"
+                            <!-- style="padding-top: 21px;" -->
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4" class="slds-p-left_x-small">
+                            <lightning-combobox name="Year Level Group" label="Year Level" value={item.yearLevelValue}
+                                placeholder="Select Year Level" options={item.yearLevelsList} onchange={handleChange}
+                                data-index={index} required class="validate" disabled={item.isYearLevelDisabled}>
+                            </lightning-combobox>
+
+                            <!-- <lightning-input type="datetime" name="Schedule DateTime For Program"
                             label="Schedule Date & Time For Program" value={item.scheduleForProgram}
                             onchange={handleChange} data-index={index} required class="validate"
                             timezone="Australia/Sydney" min={todayDate}
                             message-when-range-underflow="Program schedule shouldn't be in the past.">
                         </lightning-input> -->
-                        <lightning-input type="time" name="Schedule Time For Program" label="Schedule Time For Program"
-                            value={item.scheduleTimeForProgram} onchange={handleChange} data-index={index} required
-                            class="validate">
-                        </lightning-input>
-                    </lightning-layout-item>
-                </lightning-layout>
-            </div>
+                            <lightning-combobox name="Presentation Duration" label="Presentation Duration (In Minutes)"
+                                value={item.presentationDurationValue} placeholder="Select Presentation Duration"
+                                options={item.presentDuration} onchange={handleChange} data-index={index} required
+                                class="validate">
+                            </lightning-combobox>
+
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </template>
+          
         </template>
         <template lwc:if={isFunded}>
             <template lwc:if={showPaidProgramsQuestion}>
                 <lightning-layout class="slds-m-top_medium">
-                    <lightning-layout-item size="6" class="slds-p-right_x-small">
-                        <lightning-combobox name="Book Additional Presentations"
-                            label="Would you like to book additional presentations beyond your free ones?"
-                            value={bookAddPresentations} placeholder="Select" options={bookAddPresentationsOptions}
-                            onchange={handleChange2}>
-                        </lightning-combobox>
-                    </lightning-layout-item>
+                    <!--p>Do not show if the discount eligibilty is 'Only Paid with Promocode'
+                    </p-->
+                    <template lwc:if={showOptiontoSelectPaidProgram}>
+                        <lightning-layout-item size="6" class="slds-p-right_x-small">
+                            <lightning-combobox name="Book Additional Presentations"
+                                label="Would you like to book additional presentations beyond your free ones?" value={bookAddPresentations}
+                                placeholder="Select" options={bookAddPresentationsOptions} onchange={handleChange2}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                    </template>
                     <lightning-layout-item size="6" class="slds-p-left_x-small">
                         <template lwc:if={showPaidPrograms}>
+                        <template lwc:if={hideOptionToSelectPaidProgram}>
+                            <p>Book <b>{sponsorshipTracker.Min_Paid_Programs__c}</b> programs to receive <b>{sponsorshipTracker.Discount__c}%</b> discount for <b>{sponsorshipTracker.Discount__c}%</b> Promo</p>
+                        </template>
                             <lightning-combobox name="Number Of Paid Programs"
-                                label="How many paid one-hour presentations would you like to book?"
+                                label={paidProgramsLabel}
                                 value={noOfPaidProgramsValue} placeholder="Select Number Of Presentations"
                                 options={noOfPaidProgramsOptions} onchange={handleChange2} required class="validate">
                             </lightning-combobox>
@@ -124,21 +138,11 @@ Modified On                 :
                     </div>
                     <lightning-layout multiple-rows="true">
                         <lightning-layout-item size="4" class="slds-p-right_x-small">
-                            <lightning-combobox name="Program Type" label="Program Type" value={item.programTypeValue}
+                            <!--lightning-combobox name="Program Type" label="Program Type" value={item.programTypeValue}
                                 placeholder="Select Program Type" options={programTypeOptionsAll}
                                 onchange={handleChange3} data-index={index} required class="validate">
-                            </lightning-combobox>
-                            <lightning-combobox name="Year Level Group" label="Year Level" value={item.yearLevelValue}
-                                placeholder="Select Year Level" options={item.yearLevelsList} onchange={handleChange3}
-                                data-index={index} required class="validate" disabled={item.isYearLevelDisabled}>
-                            </lightning-combobox>
-                            <lightning-combobox name="Presentation Duration" label="Presentation Duration (In Minutes)"
-                                value={item.presentationDurationValue} placeholder="Select Presentation Duration"
-                                options={item.presentDuration} onchange={handleChange3} data-index={index}
-                                required class="validate">
-                            </lightning-combobox>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="4">
+                            </lightning-combobox-->
+
                             <lightning-combobox name="Presentation Type" label="Presentation Type"
                                 value={item.presentationTypeValue} placeholder="Select Presentation Type"
                                 options={presentationTypeOptions} onchange={handleChange3} data-index={index} required
@@ -150,7 +154,7 @@ Modified On                 :
                                 message-when-range-underflow="No. of participants should be greater than 0." max="999">
                             </lightning-input>
                         </lightning-layout-item>
-                        <lightning-layout-item size="4" class="slds-p-left_x-small">
+                        <lightning-layout-item size="4">
                             <lightning-combobox name="Program Selection" label="Program Selection"
                                 value={item.programSelectionValue} placeholder="Select Program"
                                 options={item.programSelectionOptions} onchange={handleChange3} data-index={index}
@@ -158,8 +162,21 @@ Modified On                 :
                             </lightning-combobox>
                             <lightning-input type="time" name="Schedule Time For Program"
                                 label="Schedule Time For Program" value={item.scheduleTimeForProgram}
-                                onchange={handleChange3} data-index={index} required class="validate">
+                                onchange={handleChange3} data-index={index} required class="validate" min="08:00"
+                                max="20:00">
                             </lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4" class="slds-p-left_x-small">
+                            <lightning-combobox name="Year Level Group" label="Year Level" value={item.yearLevelValue}
+                                placeholder="Select Year Level" options={item.yearLevelsList} onchange={handleChange3}
+                                data-index={index} required class="validate" disabled={item.isYearLevelDisabled}>
+                            </lightning-combobox>
+                            <lightning-combobox name="Presentation Duration" label="Presentation Duration (In Minutes)"
+                                value={item.presentationDurationValue} placeholder="Select Presentation Duration"
+                                options={item.presentDuration} onchange={handleChange3} data-index={index} required
+                                class="validate">
+                            </lightning-combobox>
+
                         </lightning-layout-item>
                     </lightning-layout>
                 </div>

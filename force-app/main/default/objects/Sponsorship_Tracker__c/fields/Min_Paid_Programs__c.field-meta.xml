@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Min_Paid_Programs__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>The count of Paid programs to be booked to let the users get offer of free programs</inlineHelpText>
+    <label>Min Paid Programs</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

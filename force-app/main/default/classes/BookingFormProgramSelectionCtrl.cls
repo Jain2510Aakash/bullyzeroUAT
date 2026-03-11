@@ -73,7 +73,7 @@ public without sharing class BookingFormProgramSelectionCtrl
     }
     @AuraEnabled
     public static String convertLead(String leadId, String workshopString, String whoWillBeMainContact, Boolean filledByBullyZero, String promoCode)
-    {
+    {	system.debug('promoCode->'+promoCode);
         Sponsorship_Tracker__c stObj;
         if(String.isNotBlank(promoCode))
         {
@@ -227,6 +227,7 @@ public without sharing class BookingFormProgramSelectionCtrl
                         workshopProductMap.put(ws.Program__c + '##Funded', new List<Workshops__c>{ws});
                     }
                 }
+                system.debug('workshopProductMap->'+workshopProductMap);
                 INSERT workshopList;
                 Map<Id, Product2> fixedProductsMap = new Map<Id, Product2>([SELECT Id, Name FROM Product2 WHERE Name = 'Travel' OR Name = 'Booking Fee']); // Name = 'Discount' OR 
                 List<Pricebook2> pbList = [SELECT Id, Name FROM Pricebook2 WHERE IsStandard = true LIMIT 1];
@@ -240,14 +241,24 @@ public without sharing class BookingFormProgramSelectionCtrl
                         oli.OpportunityId = lcr.getOpportunityId();
                         oli.Quantity = workshopProductMap.get(pbe.Product2Id + '##Normal').size();
                         oli.PricebookEntryId = pbe.Id;
-                        oli.UnitPrice = pbe.UnitPrice;
+                        if(!workshopList.isEmpty() && stObj!=null && stObj!=null && stObj.Discount__c != null && stObj.Discount__c >0 && stObj.Discount_Eligibility__c == 'Only Paid with PromoCode'){
+                            oli.UnitPrice = (pbe.UnitPrice - (pbe.UnitPrice * stObj.Discount__c)/100);
+                            if(stObj.Discount__c == 100){
+                              oli.Is_Sponsored__c = true;  
+                            } 
+                        }else{
+                            oli.UnitPrice = pbe.UnitPrice;
+                        }
+                        //oli.UnitPrice = pbe.UnitPrice;
                         oliList.add(oli);
                     }
                     if(workshopProductMap.containsKey(pbe.Product2Id + '##Funded'))
                     {
+                        system.debug('stObj= '+stObj);
                         OpportunityLineItem oli = new OpportunityLineItem();
                         oli.OpportunityId = lcr.getOpportunityId();
                         oli.Quantity = workshopProductMap.get(pbe.Product2Id + '##Funded').size();
+                        system.debug('stObj= '+oli.Quantity);
                         oli.PricebookEntryId = pbe.Id;
                         oli.UnitPrice = 0;
                         oli.Is_Sponsored__c = true;
@@ -314,7 +325,7 @@ public without sharing class BookingFormProgramSelectionCtrl
     @AuraEnabled(cacheable=true)
     public static Sponsorship_Tracker__c getSponsorshipTracker(String promoCode)
     {
-        List<Sponsorship_Tracker__c> trackerList = [SELECT Id, Organisation__c, Number_Of_Free_Programs_Per_School__c, Program_Type__c,Promo_Code_Expiry_Date__c,Min_Paid_Programs__c FROM Sponsorship_Tracker__c WHERE Promo_Code__c = :promoCode LIMIT 1];
+        List<Sponsorship_Tracker__c> trackerList = [SELECT Id,Discount__c, Organisation__c, Number_Of_Free_Programs_Per_School__c, Program_Type__c,Promo_Code_Expiry_Date__c,Min_Paid_Programs__c,Promo_Code__c,Discount_Eligibility__c FROM Sponsorship_Tracker__c WHERE Promo_Code__c = :promoCode LIMIT 1];
         if(!trackerList.isEmpty())
         {
             return trackerList[0];

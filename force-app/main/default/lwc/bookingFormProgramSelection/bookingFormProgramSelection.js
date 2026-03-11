@@ -10,6 +10,65 @@ import PRESENTATION_DURATION_FIELD from "@salesforce/schema/Workshops__c.Present
 import getProductsList from '@salesforce/apex/BookingFormProgramSelectionCtrl.getProductsList';
 import convertLead from '@salesforce/apex/BookingFormProgramSelectionCtrl.convertLead';
 import getSponsorshipTracker from '@salesforce/apex/BookingFormProgramSelectionCtrl.getSponsorshipTracker';
+const YEAR_LEVEL_ORDER = [
+    'Customised in Consultation',
+    'Government/Community Groups',
+    'Other',
+    'Parent/Carer',
+    'Parents',
+    'Primary School',
+    'Secondary School',
+    'Sports Clubs',
+    'Tafe/University',
+    'Teacher/Educator',
+    'Teachers',
+    'Workplace',
+    'Year K/P-2',
+    'Year K/Prep',
+    'Year 1',
+    'Year 1 Only',
+    'Year 1-2',
+    'Year 2',
+    'Year 2 Only',
+    'Year 3',
+    'Year 3, 4, 5, 6 Combined',
+    'Year 3-4',
+    'Year 3-4 Combined',
+    'Year 3 Only',
+    'Year 4',
+    'Year 4 Only',
+    'Year 5',
+    'Year 5-6',
+    'Year 5-6 Combined',
+    'Year 5 Only',
+    'Year 6',
+    'Year 6 Only',
+    'Year 7',
+    'Year 7, 8, 9 Combined',
+    'Year 7-8',
+    'Year 7-8 Combined',
+    'Year 7 Only',
+    'Year 8',
+    'Year 8 Only',
+    'Year 9',
+    'Year 9-10',
+    'Year 9-10 Combined',
+    'Year 9 Only',
+    'Year 10',
+    'Year 10, 11, 12 Combined',
+    'Year 10 Only',
+    'Year 11',
+    'Year 11-12',
+    'Year 11-12 Combined',
+    'Year 11 Only',
+    'Year 12',
+    'Year 12 Only',
+    'Year P-2',
+    'Year P-2 Combined',
+    'Year Prep Only',   
+     'Combined Levels'
+];
+
 
 export default class BookingFormProgramSelection extends LightningElement {
     @api leadId;
@@ -35,11 +94,13 @@ export default class BookingFormProgramSelection extends LightningElement {
     showPaidPrograms = false;
     noOfPaidProgramsOptions;
     @track selectedPaidProgramsList = [];
+    @track showFreePresentationSection = true;
     showNoOfProgramsErrorMessage = false;
     workshopRecordTypeId;
     presentationDurationOptions;
     reducedPresentationDurationOptions;
-
+    showOptiontoSelectPaidProgram = true;
+    //Promo_Code__c //Discount_Eligibility__c == 'Only Paid with PromoCode'
     get noOfProgramsOptions() {
         let options = [];
         let noOfOptions = 4;
@@ -88,6 +149,16 @@ export default class BookingFormProgramSelection extends LightningElement {
     //     let sydneyTime = d.toLocaleDateString("en-US", { timeZone: "Australia/Sydney" });
     //     return sydneyTime;
     // }
+    get hideOptionToSelectPaidProgram() {
+        return !this.showOptiontoSelectPaidProgram;
+    }
+
+    get paidProgramsLabel() {
+        return this.sponsorshipTracker?.Discount__c === 100
+            ? 'How many one-hour sessions would you like to book?'
+            : 'How many paid one-hour presentations would you like to book?';
+    }
+
 
     @wire(getObjectInfo, { objectApiName: PRODUCT_OBJECT })
     results({ error, data }) {
@@ -160,8 +231,24 @@ export default class BookingFormProgramSelection extends LightningElement {
     @wire(getSponsorshipTracker, { promoCode: "$promoCode" })
     wiredSponsorshipData({ data, error }) {
         if (data) {
+            debugger;
             this.sponsorshipTracker = data;
-            console.log('sponsorshipTracker => ', this.sponsorshipTracker);
+            console.log('this.sponsorshipTracker', this.sponsorshipTracker);
+            if (this.sponsorshipTracker.Promo_Code__c != null && this.sponsorshipTracker.Promo_Code__c != undefined && this.sponsorshipTracker.Discount_Eligibility__c == 'Only Paid with PromoCode') {
+                this.showFreePresentationSection = false;
+                this.isFunded = true;
+                this.showPaidProgramsQuestion = true;
+                this.showPaidPrograms = true;
+                this.showOptiontoSelectPaidProgram = false;
+                debugger;
+                this.noOfPaidProgramsOptions = [];
+                for (let i = 1; i <= this.sponsorshipTracker.Min_Paid_Programs__c; i++) {
+                    this.noOfPaidProgramsOptions.push({ label: i.toString(), value: i.toString() });
+                }
+                console.log('this.noOfPaidProgramsOptions', this.noOfPaidProgramsOptions);
+            }
+
+            console.log('sponsorshipTracker =>', JSON.parse(JSON.stringify(this.sponsorshipTracker)));
         } else if (error) {
             console.log('error in getSponsorshipTracker => ', error);
         }
@@ -174,6 +261,7 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     handleChange(event) {
+        debugger;
         let name = event.target.name;
         let value = event.target.value;
         let index = parseInt(event.target.dataset.index);
@@ -182,7 +270,7 @@ export default class BookingFormProgramSelection extends LightningElement {
             this.setProgramSelectionOptions(index);
             this.selectedProgramsList[index].presentationDurationValue = null;
 
-            if (value =='Workplace Programs' || value =='Customised Programs'|| value =='Parent & Teacher Programs') {
+            if (value == 'Workplace Programs' || value == 'Customised Programs' || value == 'Parent & Teacher Programs') {
                 this.selectedProgramsList[index].presentDuration = this.presentationDurationOptions;
             }
             else if (this.selectedProgramsList[index].presentDuration != this.reducedPresentationDurationOptions) {
@@ -195,15 +283,58 @@ export default class BookingFormProgramSelection extends LightningElement {
             this.setProgramSelectionOptions(index);
         }
         else if (name == 'Program Selection') {
+            debugger;
             this.selectedProgramsList[index].yearLevelsList = [];
             let yearLevelList = this.productsList.find(element => element.Id == value).Year_Level__c.split(';');
+            yearLevelList.sort((a, b) => YEAR_LEVEL_ORDER.indexOf(a) - YEAR_LEVEL_ORDER.indexOf(b));
             yearLevelList.forEach(item => {
                 this.selectedProgramsList[index].yearLevelsList.push({ label: item, value: item });
             });
             this.selectedProgramsList[index].programSelectionValue = value;
             this.selectedProgramsList[index].yearLevelValue = null;
             this.selectedProgramsList[index].isYearLevelDisabled = false;
+
+            // 🔹 Get selected label
+            const selectedOption = this.selectedProgramsList[index].programSelectionOptions.find(opt => opt.value === value);
+            const programLabel = selectedOption ? selectedOption.label.toLowerCase() : "";
+
+            let duration;
+            debugger;
+            // Programs with 60 minutes
+            const sixtyMinutePrograms = [
+                "words matter",
+                "thrive",
+                "new beginnings",
+                "understanding bullying",
+                "safetynet",
+                "workforce ready"
+            ];
+            if (sixtyMinutePrograms.some(p => programLabel.includes(p))) {
+                this.selectedProgramsList[index].presentDuration = [
+                    { label: "60 Minutes", value: "60" }
+                ];
+                this.selectedProgramsList[index].presentationDurationValue = "60";
+            } else if (programLabel.includes("it takes a village") && this.selectedProgramsList[index].presentationTypeValue != "Live Webinar") {
+                this.selectedProgramsList[index].presentDuration = [
+                    { label: "90 Minutes", value: "90" }
+                ];
+                this.selectedProgramsList[index].presentationDurationValue = "90";
+            } else if (programLabel.includes("it takes a village") && this.selectedProgramsList[index].presentationTypeValue == "Live Webinar") {
+                this.selectedProgramsList[index].presentDuration = [
+                    { label: "60 Minutes", value: "60" }
+                ];
+                this.selectedProgramsList[index].presentationDurationValue = "60";
+            } else {
+                this.selectedProgramsList[index].presentDuration = [
+                    { label: "45 Minutes", value: "45" },
+                    { label: "60 Minutes", value: "60" },
+                    { label: "90 Minutes", value: "90" }
+                ];
+                this.selectedProgramsList[index].presentationDurationValue = null;
+            }
+            console.log("Selected Program Label:", programLabel, " → Duration:", this.selectedProgramsList[index].presentationDurationValue);
         }
+
         else if (name == 'Year Level Group') {
             this.selectedProgramsList[index].yearLevelValue = value;
         }
@@ -211,6 +342,15 @@ export default class BookingFormProgramSelection extends LightningElement {
             this.selectedProgramsList[index].noOfParticpantsValue = value;
         }
         else if (name == 'Schedule Time For Program') {
+            const minTime = "08:00";
+            const maxTime = "20:00";
+            if (value < minTime || value > maxTime) {
+                // Reset value or show error
+                event.target.setCustomValidity("Please select a time between 8:00 AM and 8:00 PM.");
+            } else {
+                event.target.setCustomValidity(""); // clear error
+            }
+            event.target.reportValidity();
             this.selectedProgramsList[index].scheduleTimeForProgram = value;
         }
         else if (name == 'Presentation Duration') {
@@ -224,15 +364,16 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     setProgramSelectionOptions(index) {
-        if (this.selectedProgramsList[index].programTypeValue && this.selectedProgramsList[index].presentationTypeValue) {
+        debugger;
+        if (this.selectedProgramsList[index].presentationTypeValue) {
             if (this.productsList.length > 0) {
                 this.selectedProgramsList[index].programSelectionOptions = [];
                 this.productsList.forEach(item => {
-                    if (item.Program_Type__c == this.selectedProgramsList[index].programTypeValue && item.Presentation_Type__c == this.selectedProgramsList[index].presentationTypeValue) {
-                        let optionLabel = item.Name;
-                        if (item.PricebookEntries) {
-                            optionLabel = optionLabel + ' - $' + item.PricebookEntries[0].UnitPrice;
-                        }
+                    let optionLabel = item.Name;
+                    if (item.PricebookEntries) {
+                        optionLabel = optionLabel + ' - $' + item.PricebookEntries[0].UnitPrice;
+                    }
+                    if (item.Presentation_Type__c == this.selectedProgramsList[index].presentationTypeValue) {
                         this.selectedProgramsList[index].programSelectionOptions.push({ label: optionLabel, value: item.Id });
                     }
                 });
@@ -251,6 +392,7 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     handleChange2(event) {
+        debugger;
         let name = event.target.name;
         let value = event.target.value;
         if (name == 'Main Contact First Name') {
@@ -319,8 +461,45 @@ export default class BookingFormProgramSelection extends LightningElement {
                     });
                 }
             }
+
+
         }
         else if (name == 'Book Additional Presentations') {
+            this.bookAddPresentations = value;
+            if (this.bookAddPresentations == 'Yes') {
+                this.noOfPaidProgramsOptions = [];
+                if (this.noOfProgramsValue == undefined) {
+                    this.noOfProgramsValue = 0;
+                }
+                let noOfOptions = 4 - parseInt(this.noOfProgramsValue);
+                for (let i = 1; i <= noOfOptions; i++) {
+                    this.noOfPaidProgramsOptions.push({ label: i.toString(), value: i.toString() });
+                }
+                this.showPaidPrograms = true;
+            }
+            else {
+                this.showPaidPrograms = false;
+                this.selectedPaidProgramsList = [];
+                this.noOfPaidProgramsValue = null;
+            }
+        }
+        else if (name == 'Number Of Paid Programs') {
+            debugger;
+            this.noOfPaidProgramsValue = value;
+            let noOfPrograms = parseInt(value);
+            if (this.noOfProgramsValue == undefined) {
+                this.noOfProgramsValue = 0;
+            }
+            if (noOfPrograms > this.selectedPaidProgramsList.length) {
+                for (let i = this.selectedPaidProgramsList.length; i < noOfPrograms; i++) {
+                    this.selectedPaidProgramsList.push({ key: i + 1 + parseInt(this.noOfProgramsValue), isProgramSelectionDisabled: true, isYearLevelDisabled: true, presentDuration: this.reducedPresentationDurationOptions });
+                }
+            }
+            else if (noOfPrograms < this.selectedPaidProgramsList.length) {
+                this.selectedPaidProgramsList.splice(noOfPrograms, this.selectedPaidProgramsList.length - noOfPrograms);
+            }
+        }
+        else {
             this.bookAddPresentations = value;
             if (this.bookAddPresentations == 'Yes') {
                 this.noOfPaidProgramsOptions = [];
@@ -336,21 +515,10 @@ export default class BookingFormProgramSelection extends LightningElement {
                 this.noOfPaidProgramsValue = null;
             }
         }
-        else if (name == 'Number Of Paid Programs') {
-            this.noOfPaidProgramsValue = value;
-            let noOfPrograms = parseInt(value);
-            if (noOfPrograms > this.selectedPaidProgramsList.length) {
-                for (let i = this.selectedPaidProgramsList.length; i < noOfPrograms; i++) {
-                    this.selectedPaidProgramsList.push({ key: i + 1 + parseInt(this.noOfProgramsValue), isProgramSelectionDisabled: true, isYearLevelDisabled: true, presentDuration: this.reducedPresentationDurationOptions });
-                }
-            }
-            else if (noOfPrograms < this.selectedPaidProgramsList.length) {
-                this.selectedPaidProgramsList.splice(noOfPrograms, this.selectedPaidProgramsList.length - noOfPrograms);
-            }
-        }
     }
 
     handleChange3(event) {
+        debugger;
         let name = event.target.name;
         let value = event.target.value;
         let index = parseInt(event.target.dataset.index);
@@ -359,7 +527,7 @@ export default class BookingFormProgramSelection extends LightningElement {
             this.setPaidProgramSelectionOptions(index);
             this.selectedPaidProgramsList[index].presentationDurationValue = null;
 
-            if (value =='Workplace Programs' || value =='Customised Programs' || value =='Parent & Teacher Programs') {
+            if (value == 'Workplace Programs' || value == 'Customised Programs' || value == 'Parent & Teacher Programs') {
                 this.selectedPaidProgramsList[index].presentDuration = this.presentationDurationOptions;
             }
             else if (this.selectedPaidProgramsList[index].presentDuration != this.reducedPresentationDurationOptions) {
@@ -372,14 +540,50 @@ export default class BookingFormProgramSelection extends LightningElement {
             this.setPaidProgramSelectionOptions(index);
         }
         else if (name == 'Program Selection') {
+            debugger;
             this.selectedPaidProgramsList[index].yearLevelsList = [];
             let yearLevelList = this.productsList.find(element => element.Id == value).Year_Level__c.split(';');
+            yearLevelList.sort((a, b) => YEAR_LEVEL_ORDER.indexOf(a) - YEAR_LEVEL_ORDER.indexOf(b));
             yearLevelList.forEach(item => {
                 this.selectedPaidProgramsList[index].yearLevelsList.push({ label: item, value: item });
             });
             this.selectedPaidProgramsList[index].programSelectionValue = value;
             this.selectedPaidProgramsList[index].yearLevelValue = null;
             this.selectedPaidProgramsList[index].isYearLevelDisabled = false;
+            // 🔹 Get selected label
+            const selectedOption = this.selectedPaidProgramsList[index].programSelectionOptions.find(opt => opt.value === value);
+            const programLabel = selectedOption ? selectedOption.label.toLowerCase() : "";
+
+            let duration;
+            debugger;
+            // Programs with 60 minutes
+            const sixtyMinutePrograms = [
+                "words matter",
+                "thrive",
+                "new beginnings",
+                "understanding bullying",
+                "safetynet",
+                "workforce ready"
+            ];
+            if (sixtyMinutePrograms.some(p => programLabel.includes(p))) {
+                this.selectedPaidProgramsList[index].presentDuration = [
+                    { label: "60 Minutes", value: "60" }
+                ];
+                this.selectedPaidProgramsList[index].presentationDurationValue = "60";
+            } else if (programLabel.includes("it takes a village")) {
+                this.selectedPaidProgramsList[index].presentDuration = [
+                    { label: "90 Minutes", value: "90" }
+                ];
+                this.selectedPaidProgramsList[index].presentationDurationValue = "90";
+            } else {
+                this.selectedPaidProgramsList[index].presentDuration = [
+                    { label: "45 Minutes", value: "45" },
+                    { label: "60 Minutes", value: "60" },
+                    { label: "90 Minutes", value: "90" }
+                ];
+                this.selectedPaidProgramsList[index].presentationDurationValue = null;
+            }
+            console.log("Selected Program Label:", programLabel, " → Duration:", this.selectedPaidProgramsList[index].presentationDurationValue);
         }
         else if (name == 'Year Level Group') {
             this.selectedPaidProgramsList[index].yearLevelValue = value;
@@ -388,6 +592,15 @@ export default class BookingFormProgramSelection extends LightningElement {
             this.selectedPaidProgramsList[index].noOfParticpantsValue = value;
         }
         else if (name == 'Schedule Time For Program') {
+            const minTime = "08:00";
+            const maxTime = "20:00";
+            if (value < minTime || value > maxTime) {
+                // Reset value or show error
+                event.target.setCustomValidity("Please select a time between 8:00 AM and 8:00 PM.");
+            } else {
+                event.target.setCustomValidity(""); // clear error
+            }
+            event.target.reportValidity();
             this.selectedPaidProgramsList[index].scheduleTimeForProgram = value;
         }
         else if (name == 'Presentation Duration') {
@@ -396,15 +609,16 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     setPaidProgramSelectionOptions(index) {
-        if (this.selectedPaidProgramsList[index].programTypeValue && this.selectedPaidProgramsList[index].presentationTypeValue) {
+        debugger;
+        if (this.selectedPaidProgramsList[index].presentationTypeValue) {
             if (this.productsList.length > 0) {
                 this.selectedPaidProgramsList[index].programSelectionOptions = [];
                 this.productsList.forEach(item => {
-                    if (item.Program_Type__c == this.selectedPaidProgramsList[index].programTypeValue && item.Presentation_Type__c == this.selectedPaidProgramsList[index].presentationTypeValue) {
-                        let optionLabel = item.Name;
-                        if (item.PricebookEntries) {
-                            optionLabel = optionLabel + ' - $' + item.PricebookEntries[0].UnitPrice;
-                        }
+                    let optionLabel = item.Name;
+                    if (item.PricebookEntries) {
+                        optionLabel = optionLabel + ' - $' + item.PricebookEntries[0].UnitPrice;
+                    }
+                    if (item.Presentation_Type__c == this.selectedPaidProgramsList[index].presentationTypeValue) {
                         this.selectedPaidProgramsList[index].programSelectionOptions.push({ label: optionLabel, value: item.Id });
                     }
                 });
@@ -423,6 +637,7 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     validateFormPartB(event) {
+        debugger;
         // console.log('leadId => ', this.leadId);
         // console.log('preferredDate1 => ', this.preferredDate1);
         this.showErrorMessage = false;
@@ -439,10 +654,24 @@ export default class BookingFormProgramSelection extends LightningElement {
             }
         });
         if (isValid) {
-             if ((this.bookAddPresentations === undefined || this.bookAddPresentations == '' || this.bookAddPresentations == 'No') && this.promoCode != null ) {
+            //&& this.sponsorshipTracker.Discount_Eligibility__c != 'Only Free with PromoCode'
+            if ((this.bookAddPresentations === undefined || this.bookAddPresentations == '' || this.bookAddPresentations == 'No') && this.promoCode != null && this.sponsorshipTracker.Discount_Eligibility__c != 'Only Paid with PromoCode') {
                 this.errorMessage = `Please book min ${this.sponsorshipTracker.Min_Paid_Programs__c} paid program(s) to get ${this.sponsorshipTracker.Number_Of_Free_Programs_Per_School__c} free program(s) - valid until ${this.sponsorshipTracker.Promo_Code_Expiry_Date__c}`;
                 this.showErrorMessage = true;
                 return;
+            } else if (this.promoCode != null && this.bookAddPresentations == 'Yes' && this.sponsorshipTracker.Discount_Eligibility__c != 'Only Paid with PromoCode') {
+                let countofPaidProgram = Object.keys(this.selectedPaidProgramsList).length;
+                let countoffreeProgram = Object.keys(this.selectedProgramsList).length;
+                if (countofPaidProgram < this.sponsorshipTracker.Min_Paid_Programs__c) {
+                    this.errorMessage = `Please book atleast ${this.sponsorshipTracker.Min_Paid_Programs__c} paid presentations to get ${this.sponsorshipTracker.Number_Of_Free_Programs_Per_School__c} free presentations.`;
+                    this.showErrorMessage = true;
+                    return;
+                }
+                if (countoffreeProgram > this.sponsorshipTracker.Number_Of_Free_Programs_Per_School__c) {
+                    this.errorMessage = `You have exceeded the limit of free presentations, you can only avail ${this.sponsorshipTracker.Number_Of_Free_Programs_Per_School__c} free presentations.`;
+                    this.showErrorMessage = true;
+                    return;
+                }
             }
             let selectedProgramsCombinedList = [];
             selectedProgramsCombinedList = this.selectedProgramsList.concat(this.selectedPaidProgramsList);
@@ -527,6 +756,7 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     calculateTimeDifference(startTime, endTime) {
+        debugger;
         // Parse the time values (HH:MM format) into hours and minutes
         const [startHours, startMinutes] = startTime.split(':').map(Number);
         const [endHours, endMinutes] = endTime.split(':').map(Number);
@@ -541,6 +771,7 @@ export default class BookingFormProgramSelection extends LightningElement {
     }
 
     convertLead(workshopList) {
+        debugger;
         convertLead({ leadId: this.leadId, workshopString: JSON.stringify(workshopList), whoWillBeMainContact: this.mainConFirstName + ' ' + this.mainConLastName, filledByBullyZero: this.filledByBullyZero, promoCode: this.promoCode })
             .then(result => {
                 if (result === 'SUCCESS') {

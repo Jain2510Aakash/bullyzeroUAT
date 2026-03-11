@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Assign_Address_Field_Values_To_Lead_Object</name>
         <label>Assign Address Field Values To Lead Object</label>
@@ -379,7 +380,7 @@
         <defaultConnectorLabel>Doesn&apos;t Exist Or Programs Not Available</defaultConnectorLabel>
         <rules>
             <name>Exist_Programs_Available</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>(1 AND 2) OR (1 AND 3)</conditionLogic>
             <conditions>
                 <leftValueReference>Get_Sponsorship_Tracker_Record_From_Promo_Code</leftValueReference>
                 <operator>IsBlank</operator>
@@ -392,6 +393,13 @@
                 <operator>GreaterThanOrEqualTo</operator>
                 <rightValue>
                     <elementReference>Get_Sponsorship_Tracker_Record_From_Promo_Code.Number_Of_Free_Programs_Per_School__c</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Sponsorship_Tracker_Record_From_Promo_Code.Discount_Eligibility__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Only Paid with PromoCode</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -636,11 +644,27 @@
             <name>Form_Part_B_Heading</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); font-size: 28px;&quot;&gt;Program Booking Form&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>AlreadyFilledMessage</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Your form is already filled up. Thank you!&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>false</showFooter>
         <showHeader>false</showHeader>
@@ -660,11 +684,27 @@
             <name>Form_Heading</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 28px; color: rgb(0, 0, 0);&quot;&gt;Booking Form Part A&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>FundedBookingMgs</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Note: This booking is funded by &lt;/span&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt;{!Get_Sponsorship_Tracker_Record_From_Promo_Code.Organisation__r.Name}&lt;/strong&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;. You are eligible to book &lt;/span&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt;{!Get_Sponsorship_Tracker_Record_From_Promo_Code.Number_Of_Free_Programs_Per_School__c} free program(s)&lt;/strong&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt; with the booking of &lt;/span&gt;&lt;strong style=&quot;font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;{!Get_Sponsorship_Tracker_Record_From_Promo_Code.Min_Paid_Programs__c} &lt;/strong&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt;paid program(s)&lt;/strong&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -672,6 +712,43 @@
                     <operator>EqualTo</operator>
                     <rightValue>
                         <booleanValue>true</booleanValue>
+                    </rightValue>
+                </conditions>
+                <conditions>
+                    <leftValueReference>Get_Sponsorship_Tracker_Record_From_Promo_Code.Discount_Eligibility__c</leftValueReference>
+                    <operator>NotEqualTo</operator>
+                    <rightValue>
+                        <stringValue>Only Paid with PromoCode</stringValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>OnlyPaidWithPromoCodeMSG</name>
+            <fieldText>&lt;p&gt;Book &lt;strong style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!Get_Sponsorship_Tracker_Record_From_Promo_Code.Min_Paid_Programs__c} &lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;programs to receive a &lt;/span&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!Get_Sponsorship_Tracker_Record_From_Promo_Code.Discount__c}&lt;/strong&gt;&lt;strong&gt;%&lt;/strong&gt; discount for &lt;strong style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!Get_Sponsorship_Tracker_Record_From_Promo_Code.Discount__c}% &lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;Promo&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>isFunded</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <booleanValue>true</booleanValue>
+                    </rightValue>
+                </conditions>
+                <conditions>
+                    <leftValueReference>Get_Sponsorship_Tracker_Record_From_Promo_Code.Discount_Eligibility__c</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <stringValue>Only Paid with PromoCode</stringValue>
                     </rightValue>
                 </conditions>
             </visibilityRule>
@@ -683,6 +760,14 @@
             <fieldType>InputField</fieldType>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <validationRule>
                 <errorMessage>&lt;p&gt;Maximum 255 characters are alllowed.&lt;/p&gt;</errorMessage>
                 <formulaExpression>LEN({!Name_of_School}) &lt;= 255</formulaExpression>
@@ -696,6 +781,14 @@
             <fieldType>DropdownBox</fieldType>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Address</name>
@@ -722,6 +815,14 @@
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Do_you_have_different_presentation_location_to_address_above</name>
@@ -730,6 +831,14 @@
             <fieldType>InputField</fieldType>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Presentation_Location</name>
@@ -756,6 +865,14 @@
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -780,6 +897,14 @@
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Maximum 40 characters are alllowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>LEN({!First_Name_of_Contact}) &lt;= 40</formulaExpression>
@@ -792,6 +917,14 @@
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Maximum 128 characters are alllowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>LEN({!Work_Title}) &lt;= 128</formulaExpression>
@@ -822,6 +955,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Maximum 40 characters are alllowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>LEN({!School_Phone_Number.value}) &lt;= 40</formulaExpression>
@@ -846,6 +987,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;This value doesn&apos;t follow the required pattern. Try a different format or contact your admin for help.&lt;/p&gt;</errorMessage>
                         <formulaExpression>REGEX({!Email_Address_Booking_Contact.value},&quot;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}&quot;)</formulaExpression>
@@ -854,10 +1003,18 @@
                 <fields>
                     <name>Preferred_Date_For_Presentation_1</name>
                     <dataType>Date</dataType>
-                    <fieldText>Preferred Date For Presentation 1</fieldText>
+                    <fieldText>Preferred Booking Date number 1</fieldText>
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Past dates are not allowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>{!$Flow.CurrentDate} &lt;= {!Preferred_Date_For_Presentation_1}</formulaExpression>
@@ -866,10 +1023,18 @@
                 <fields>
                     <name>Preferred_Date_For_Presentation_3</name>
                     <dataType>Date</dataType>
-                    <fieldText>Preferred Date For Presentation 3</fieldText>
+                    <fieldText>Preferred Booking Date number 3</fieldText>
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Past dates are not allowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>{!$Flow.CurrentDate} &lt;= {!Preferred_Date_For_Presentation_3}</formulaExpression>
@@ -893,6 +1058,14 @@
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Maximum 80 characters are alllowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>LEN({!Last_Name_of_Contact}) &lt;= 80</formulaExpression>
@@ -917,6 +1090,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Maximum 40 characters are alllowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>LEN({!Direct_Phone_Number.value}) &lt;= 40</formulaExpression>
@@ -947,6 +1128,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;This value doesn&apos;t follow the required pattern. Try a different format or contact your admin for help.&lt;/p&gt;</errorMessage>
                         <formulaExpression>REGEX({!Email_Address_School_Organisation.value},&quot;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}&quot;)</formulaExpression>
@@ -959,6 +1148,14 @@
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Maximum 255 characters are alllowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>LEN({!Website}) &lt;= 255</formulaExpression>
@@ -967,10 +1164,18 @@
                 <fields>
                     <name>Preferred_Date_For_Presentation_2</name>
                     <dataType>Date</dataType>
-                    <fieldText>Preferred Date For Presentation 2</fieldText>
+                    <fieldText>Preferred Booking Date number 2</fieldText>
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;Past dates are not allowed.&lt;/p&gt;</errorMessage>
                         <formulaExpression>{!$Flow.CurrentDate} &lt;= {!Preferred_Date_For_Presentation_2}</formulaExpression>
@@ -986,6 +1191,14 @@
             </fields>
             <isRequired>false</isRequired>
             <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <nextOrFinishButtonLabel>Next</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
@@ -1003,6 +1216,14 @@
             <name>Form_B_Heading</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 28px; color: rgb(0, 0, 0);&quot;&gt;Program Booking Form&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>ProgramSelectionLWC</name>
@@ -1035,6 +1256,14 @@
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>false</showFooter>
         <showHeader>false</showHeader>
@@ -1054,6 +1283,14 @@
             <name>PromoCodeScreenHeading</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 28px; color: rgb(0, 0, 0);&quot;&gt;Enter Promo Code&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Promo_Code</name>
@@ -1065,11 +1302,27 @@
             <fieldType>InputField</fieldType>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>PromoCodeErrorMessage</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(255, 0, 0);&quot;&gt;Please enter a valid promo code. The code may be incorrect or expired.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
